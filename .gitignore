@@ -1,0 +1,12 @@
+MediAI-Healthcare-System
+
+app.py
+requirements.txt
+README.md
+database.db
+
+models/
+templates/
+static/
+dataset/
+images/
