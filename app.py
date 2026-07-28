@@ -42,8 +42,8 @@ create_database()
 # Load Machine Learning Model
 # ==========================================
 
-model = joblib.load("models/random_forest_model.pkl")
-label_encoder = joblib.load("models/disease_label_encoder.pkl")
+model = joblib.load("random_forest_model.pkl")
+label_encoder = joblib.load("disease_label_encoder.pkl")
 
 # ==========================================
 # Dashboard
