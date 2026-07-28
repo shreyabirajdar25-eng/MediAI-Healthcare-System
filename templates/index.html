@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MediAI Disease Prediction</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',Arial,sans-serif;
+}
+
+body{
+background:#eef6fb;
+}
+
+/* Header */
+
+.header{
+background:linear-gradient(135deg,#0077b6,#00b4d8);
+color:white;
+padding:30px;
+text-align:center;
+box-shadow:0 4px 10px rgba(0,0,0,.2);
+}
+
+.header h1{
+font-size:38px;
+}
+
+.header p{
+margin-top:10px;
+font-size:18px;
+}
+
+/* Container */
+
+.container{
+width:90%;
+max-width:950px;
+margin:35px auto;
+background:white;
+padding:35px;
+border-radius:20px;
+box-shadow:0 8px 20px rgba(0,0,0,.15);
+}
+
+/* Section */
+
+.section{
+margin-bottom:30px;
+}
+
+.section h2{
+color:#0077b6;
+margin-bottom:20px;
+border-left:6px solid #0077b6;
+padding-left:10px;
+}
+
+.row{
+display:flex;
+gap:20px;
+margin-bottom:20px;
+}
+
+.input-box{
+flex:1;
+}
+
+label{
+display:block;
+margin-bottom:8px;
+font-weight:bold;
+color:#333;
+}
+
+input,
+select{
+
+width:100%;
+padding:12px;
+border:1px solid #ccc;
+border-radius:10px;
+font-size:15px;
+outline:none;
+
+}
+
+input:focus,
+select:focus{
+
+border:2px solid #0077b6;
+
+}
+
+/* Buttons */
+
+.buttons{
+
+text-align:center;
+margin-top:25px;
+
+}
+
+.buttons button{
+
+background:#0077b6;
+color:white;
+border:none;
+padding:14px 28px;
+margin:10px;
+border-radius:10px;
+font-size:16px;
+cursor:pointer;
+transition:.3s;
+
+}
+
+.buttons button:hover{
+
+background:#023e8a;
+transform:scale(1.05);
+
+}
+
+/* Footer */
+
+.footer{
+
+margin-top:40px;
+background:#023e8a;
+color:white;
+text-align:center;
+padding:18px;
+
+}
+
+@media(max-width:768px){
+
+.row{
+
+flex-direction:column;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<h1>🏥 MediAI Disease Prediction</h1>
+
+<p>AI Based Disease Prediction & Personalized Healthcare Recommendation System</p>
+
+</div>
+
+<div class="container">
+
+<form action="/predict" method="POST">
+
+<div class="section">
+
+<h2>👤 Patient Information</h2>
+
+<div class="row">
+
+<div class="input-box">
+<label>Patient Name</label>
+<input type="text" name="name" required>
+</div>
+
+<div class="input-box">
+<label>Email</label>
+<input type="email" name="email" required>
+</div>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<h2>🩺 Symptoms</h2>
+
+<div class="row">
+
+<div class="input-box">
+<label>Fever (0 = No, 1 = Yes)</label>
+<input type="number" name="fever" min="0" max="1" required>
+</div>
+
+<div class="input-box">
+<label>Cough (0 = No, 1 = Yes)</label>
+<input type="number" name="cough" min="0" max="1" required>
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="input-box">
+<label>Fatigue (0 = No, 1 = Yes)</label>
+<input type="number" name="fatigue" min="0" max="1" required>
+</div>
+
+<div class="input-box">
+<label>Difficulty Breathing (0 = No, 1 = Yes)</label>
+<input type="number" name="difficulty_breathing" min="0" max="1" required>
+</div>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<h2>❤️ Health Information</h2>
+
+<div class="row">
+
+<div class="input-box">
+<label>Age</label>
+<input type="number" name="age" required>
+</div>
+
+<div class="input-box">
+<label>Gender</label>
+
+<select name="gender" required>
+
+<option value="">Select Gender</option>
+<option value="0">Female</option>
+<option value="1">Male</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="input-box">
+<label>Blood Pressure</label>
+<input type="number" name="blood_pressure" placeholder="Example: 120" required>
+</div>
+
+<div class="input-box">
+<label>Cholesterol Level</label>
+<input type="number" name="cholesterol_level" placeholder="Example: 200" required>
+</div>
+
+</div>
+
+</div>
+
+<input type="hidden" name="age_scaled" value="0">
+<input type="hidden" name="bp_scaled" value="0">
+<input type="hidden" name="chol_scaled" value="0">
+<input type="hidden" name="risk_level" value="1">
+
+<div class="buttons">
+
+<button type="submit">
+🔍 Predict Disease
+</button>
+
+<a href="/">
+<button type="button">
+🏠 Dashboard
+</button>
+</a>
+
+<a href="/history">
+<button type="button">
+📋 Patient History
+</button>
+</a>
+
+</div>
+
+</form>
+
+</div>
+
+<div class="footer">
+
+<h3>MediAI Healthcare System</h3>
+
+<p>© 2026 Internship Project | Flask • Machine Learning • SQLite • Chart.js</p>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MediAI Healthcare Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',Arial,sans-serif;
+}
+
+body{
+background:#eef6fb;
+}
+
+/* Header */
+
+.header{
+background:linear-gradient(135deg,#0066cc,#00b4d8);
+color:white;
+padding:30px;
+text-align:center;
+box-shadow:0 4px 10px rgba(0,0,0,.2);
+}
+
+.header h1{
+font-size:38px;
+}
+
+.header p{
+margin-top:10px;
+font-size:18px;
+}
+
+#date{
+margin-top:12px;
+font-size:15px;
+font-weight:bold;
+}
+
+/* Dashboard Cards */
+
+.dashboard-cards{
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+gap:30px;
+margin:40px;
+}
+
+.card{
+width:250px;
+padding:30px;
+border-radius:20px;
+color:white;
+text-align:center;
+box-shadow:0 10px 20px rgba(0,0,0,.18);
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-10px);
+}
+
+.card .icon{
+font-size:48px;
+margin-bottom:15px;
+}
+
+.card h2{
+font-size:34px;
+margin-bottom:10px;
+}
+
+.card p{
+font-size:18px;
+}
+
+.blue{
+background:linear-gradient(135deg,#0077ff,#00b4ff);
+}
+
+.red{
+background:linear-gradient(135deg,#ff4d4d,#ff8080);
+}
+
+.green{
+background:linear-gradient(135deg,#28a745,#64dd17);
+}
+
+.orange{
+background:linear-gradient(135deg,#ff9800,#ffc107);
+}
+
+/* Buttons */
+
+.menu{
+text-align:center;
+margin:30px;
+}
+
+.menu button{
+background:#0077b6;
+color:white;
+padding:15px 30px;
+border:none;
+border-radius:10px;
+font-size:16px;
+cursor:pointer;
+margin:10px;
+transition:.3s;
+}
+
+.menu button:hover{
+background:#023e8a;
+transform:scale(1.05);
+}
+
+/* Section */
+
+.section-title{
+text-align:center;
+font-size:30px;
+color:#023e8a;
+margin:30px;
+}
+
+/* Chart */
+
+.chart-container{
+width:900px;
+height:500px;
+max-width:95%;
+margin:40px auto;
+background:white;
+padding:25px;
+border-radius:20px;
+box-shadow:0 8px 20px rgba(0,0,0,.15);
+position:relative;
+}
+
+.chart-container canvas{
+width:100%!important;
+height:100%!important;
+}
+
+/* Table */
+
+.table-container{
+width:95%;
+margin:40px auto;
+overflow-x:auto;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+box-shadow:0 8px 20px rgba(0,0,0,.15);
+border-radius:15px;
+overflow:hidden;
+}
+
+thead{
+background:#0077b6;
+color:white;
+}
+
+th{
+padding:16px;
+}
+
+td{
+padding:16px;
+text-align:center;
+border-bottom:1px solid #ddd;
+}
+
+tbody tr:nth-child(even){
+background:#f8fcff;
+}
+
+tbody tr:hover{
+background:#dff3ff;
+}
+
+/* Footer */
+
+.footer{
+margin-top:40px;
+background:#023e8a;
+color:white;
+text-align:center;
+padding:20px;
+}
+
+@media(max-width:768px){
+
+.dashboard-cards{
+flex-direction:column;
+align-items:center;
+}
+
+.chart-container{
+width:95%;
+height:400px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<h1>🏥 MediAI Healthcare Dashboard</h1>
+
+<p>AI Based Disease Prediction & Personalized Healthcare Recommendation System</p>
+
+<p id="date"></p>
+
+</div>
+
+<div class="dashboard-cards">
+
+<div class="card blue">
+<div class="icon">👥</div>
+<h2>{{ total }}</h2>
+<p>Total Patients</p>
+</div>
+
+<div class="card red">
+<div class="icon">🦠</div>
+<h2>{{ disease }}</h2>
+<p>Most Common Disease</p>
+</div>
+
+<div class="card green">
+<div class="icon">🤖</div>
+<h2>ONLINE</h2>
+<p>AI Model Status</p>
+</div>
+
+<div class="card orange">
+<div class="icon">📊</div>
+<h2>{{ patients|length }}</h2>
+<p>Recent Records</p>
+</div>
+
+</div>
+
+<div class="menu">
+
+<a href="/predict-page">
+<button>🩺 Predict Disease</button>
+</a>
+
+<a href="/history">
+<button>📋 Patient History</button>
+</a>
+
+</div>
+
+<h2 class="section-title">
+📊 Disease Analysis
+</h2>
+
+<div class="chart-container">
+
+<canvas id="diseaseChart"></canvas>
+
+</div>
+
+<h2 class="section-title">
+🩺 Recent Predictions
+</h2>
+
+<div class="table-container">
+
+<table>
+
+<thead>
+
+<tr>
+<th>ID</th>
+<th>Patient Name</th>
+<th>Email</th>
+<th>Disease</th>
+<th>Date</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for patient in patients %}
+
+<tr>
+
+<td>{{ patient[0] }}</td>
+<td>{{ patient[1] }}</td>
+<td>{{ patient[2] }}</td>
+<td>{{ patient[5] }}</td>
+<td>{{ patient[6] }}</td>
+
+</tr>
+
+{% else %}
+
+<tr>
+
+<td colspan="5">
+
+No Patient Records Available
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+<script>
+
+document.getElementById("date").innerHTML =
+"📅 " + new Date().toLocaleString();
+
+// Data from Flask
+const diseaseNames = JSON.parse('{{ disease_names | safe }}');
+const diseaseCounts = JSON.parse('{{ disease_counts | safe }}');
+
+// Create Chart
+const canvas = document.getElementById("diseaseChart");
+
+if (canvas && diseaseNames.length > 0) {
+
+    const ctx = canvas.getContext("2d");
+
+    new Chart(ctx, {
+
+        type: "doughnut",
+
+        data: {
+
+            labels: diseaseNames,
+
+            datasets: [{
+
+                label: "Disease Count",
+
+                data: diseaseCounts,
+
+                backgroundColor: [
+
+                    "#36A2EB",
+                    "#4CAF50",
+                    "#FF6384",
+                    "#FFCE56",
+                    "#9966FF",
+                    "#00BCD4",
+                    "#FF9800",
+                    "#8BC34A",
+                    "#795548",
+                    "#E91E63"
+
+                ],
+
+                borderColor: "#ffffff",
+
+                borderWidth: 2
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            animation: {
+
+                animateRotate: true,
+
+                animateScale: true
+
+            },
+
+            plugins: {
+
+                title: {
+
+                    display: true,
+
+                    text: "Disease Distribution",
+
+                    font: {
+
+                        size: 20
+
+                    }
+
+                },
+
+                legend: {
+
+                    position: "right"
+
+                }
+
+            }
+
+        }
+
+    });
+
+}
+else{
+
+    document.querySelector(".chart-container").innerHTML =
+
+    "<h2 style='text-align:center;padding-top:180px;color:#555;'>No Disease Data Available</h2>";
+
+}
+
+</script>
+
+<div class="footer">
+
+<h2>🏥 MediAI Healthcare System</h2>
+
+<p>
+
+AI Based Disease Prediction & Personalized Healthcare Recommendation System
+
+</p>
+
+<br>
+
+<p>
+
+Developed Using Flask • Machine Learning • SQLite • Chart.js
+
+</p>
+
+<br>
+
+<p>
+
+© 2026 Internship Project
+
+</p>
+
+</div>
+
+</body>
+
+</html>
